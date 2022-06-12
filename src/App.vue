@@ -4,8 +4,6 @@ import ArbChain from './components/ArbChain.vue'
 
 import { WalletMultiButton } from 'solana-wallets-vue'
 
-
-
 </script>
 
 <template>
@@ -14,7 +12,6 @@ import { WalletMultiButton } from 'solana-wallets-vue'
   </div>
   <img alt="Vue logo" src="./assets/logo.png" />
   <ArbChain />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
 </template>
 
 <style>
