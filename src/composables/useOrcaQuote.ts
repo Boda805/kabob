@@ -1,7 +1,8 @@
-import { Keypair, Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
-import { getOrca, OrcaPoolConfig } from "@orca-so/sdk";
+import { Keypair, Connection, PublicKey } from '@solana/web3.js';
+import { getOrca, OrcaPoolConfig, OrcaU64 /*, Network, OrcaFarmConfig */ } from "@orca-so/sdk";
 import Decimal from "decimal.js";
-import { ref, watchEffect }  from "vue";
+import { Ref, ref, watchEffect }  from "vue";
+
 
 
 export default () => {
@@ -11,20 +12,25 @@ export default () => {
     const outputAmount = ref();
     const outputToken = ref();
 
+    // Devnet
+    // const connection = new Connection("https://api.devnet.solana.com", "singleGossip");
+    // const orca = getOrca(connection, Network.DEVNET);
+    
+    // Mainnet
     const connection = new Connection("https://api.mainnet-beta.solana.com", "singleGossip");
-    // const connection = new Connection(clusterApiUrl("mainnet-beta"));
-
     const orca = getOrca(connection);
+
 
     tokenPair.value = orca.getPool(OrcaPoolConfig.ORCA_SOL);
     inputToken.value = tokenPair.value.getTokenB();
+    outputToken.value = tokenPair.value.getTokenA();
 
     watchEffect(async () => {
         if (inputAmount.value) {
             try {
                 const quote = await tokenPair.value?.getQuote(inputToken.value, new Decimal(inputAmount.value));
-                outputAmount.value = quote?.getMinOutputAmount();
-                console.log(`Swap ${inputAmount.value?.toString()} SOL for at least ${outputAmount.value?.toNumber()} ORCA`);
+                const quoteOrca: OrcaU64 = quote?.getMinOutputAmount()
+                outputAmount.value = quoteOrca.toDecimal();
             } catch (err) {
                 console.warn(err);
             }

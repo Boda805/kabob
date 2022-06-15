@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
 import ArbChain from './components/ArbChain.vue'
 
 import { WalletMultiButton } from 'solana-wallets-vue'

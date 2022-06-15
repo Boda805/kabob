@@ -1,31 +1,34 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useWallet } from 'solana-wallets-vue';
 import Decimal from "decimal.js";
 
-import { push } from './ArbBlock.vue';
 import ArbBlock from './ArbBlock.vue';
+import useArbChain from '../composables/useArbChain';
 
 // const props = defineProps({
 //   blocks: { type: Array, default: () => [] },
 // });
 
-// const state = reactive({ blocks: [] });
+const { blocks, addBlock } = useArbChain();
+const firstBlockInput = ref(new Decimal(1));
 
-const blocks = ref([]);
-const blockNumber = ref(1);
+watchEffect(() => {
+    if (blocks.value.length > 0) {
+        blocks.value[0].inputAmount = firstBlockInput.value// { blockNumber: 1, inputAmount: firstBlockInput.value }
+        console.log(blocks.value);
+    }
+    
+})
 
-const addStrategry = () => {
-    push(blocks.value, { blockNumber: blockNumber.value });
-    blockNumber.value++;
-}
 </script>
 
 <template>
-    <button @click="addStrategry">
+    <button @click="addBlock">
         +
     </button>
+    <input v-model="firstBlockInput" />
     <div v-for="block in blocks" >
-        <ArbBlock :blockNumber="block.blockNumber" />
+        <ArbBlock :blockNumber="block.blockNumber"  />
     </div>
 </template>

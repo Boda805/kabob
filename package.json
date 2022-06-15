@@ -8,7 +8,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@jup-ag/core": "^1.0.0-beta.27",
     "@orca-so/sdk": "1.1.0",
     "@solana/wallet-adapter-wallets": "^0.16.1",
     "@solana/web3.js": "^1.43.6",
