@@ -2,17 +2,13 @@
 import { ref, watchEffect }  from "vue";
 import useOrcaQuote from '../composables/useOrcaQuote';
 import useArbChain from '../composables/useArbChain';
-import Decimal from "decimal.js";
-
 
 const props = defineProps({
   blockNumber: { type: Number, default: () => 0 },
 });
 
-const { inputToken, inputAmount, outputToken, outputAmount, tokenPair } = useOrcaQuote();
+const { inputToken, inputAmount, outputToken, outputAmount, tokenPair, swap } = useOrcaQuote();
 const { blocks, setBlockInputAmount, setBlockOutputAmount } = useArbChain();
-
-console.log(props.blockNumber);
 
 watchEffect(() => {
     if (props.blockNumber == 1 && blocks.value.length > 0) {
@@ -29,5 +25,5 @@ watchEffect(() => {
 
 
 <template>
-    <div>{{ inputAmount?.toString() }} {{ inputToken.tag }} for {{ outputAmount?.toNumber() }} {{ outputToken.tag }}</div>
+    <div>{{ inputAmount?.toString() }} {{ inputToken.tag }} for {{ outputAmount?.toNumber() }} {{ outputToken.tag }}</div><button @click="swap"></button>
 </template>

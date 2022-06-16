@@ -6,16 +6,12 @@ import Decimal from "decimal.js";
 import ArbBlock from './ArbBlock.vue';
 import useArbChain from '../composables/useArbChain';
 
-// const props = defineProps({
-//   blocks: { type: Array, default: () => [] },
-// });
-
 const { blocks, addBlock } = useArbChain();
-const firstBlockInput = ref(new Decimal(1));
+const firstBlockInput = ref(1);
 
 watchEffect(() => {
-    if (blocks.value.length > 0) {
-        blocks.value[0].inputAmount = firstBlockInput.value// { blockNumber: 1, inputAmount: firstBlockInput.value }
+    if (blocks.value.length > 0 && firstBlockInput.value) {
+        blocks.value[0].inputAmount = new Decimal(firstBlockInput.value);
         console.log(blocks.value);
     }
     

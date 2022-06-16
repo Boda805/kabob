@@ -20,28 +20,40 @@ export default () => {
     const connection = new Connection("https://api.mainnet-beta.solana.com", "singleGossip");
     const orca = getOrca(connection);
 
-
     tokenPair.value = orca.getPool(OrcaPoolConfig.ORCA_SOL);
     inputToken.value = tokenPair.value.getTokenB();
     outputToken.value = tokenPair.value.getTokenA();
 
     watchEffect(async () => {
-        if (inputAmount.value) {
+        if (inputAmount.value && inputToken.value) {
             try {
-                const quote = await tokenPair.value?.getQuote(inputToken.value, new Decimal(inputAmount.value));
-                const quoteOrca: OrcaU64 = quote?.getMinOutputAmount()
-                outputAmount.value = quoteOrca.toDecimal();
+                await getQuote(inputToken.value, inputAmount.value);
             } catch (err) {
                 console.warn(err);
             }
         }
     })
 
+    const getQuote = async (inputToken, inputAmount) => {
+        const quote = await tokenPair.value?.getQuote(inputToken, inputAmount);
+        const quoteOrca: OrcaU64 = quote?.getMinOutputAmount()
+        
+        outputAmount.value = quoteOrca.toDecimal();
+    }
+
+    const swap = () => {
+        inputToken.value = inputToken.value.tag == tokenPair.value.getTokenB().tag ? tokenPair.value.getTokenA() : tokenPair.value.getTokenB();
+        outputToken.value = outputToken.value.tag == tokenPair.value.getTokenB().tag ? tokenPair.value.getTokenA() : tokenPair.value.getTokenB();
+    }
+
     return {
         tokenPair,
         inputAmount,
         inputToken,
         outputAmount,
-        outputToken
+        outputToken,
+
+        getQuote,
+        swap
     }
 }
