@@ -6,10 +6,7 @@ import { WalletMultiButton } from 'solana-wallets-vue'
 </script>
 
 <template>
-  <div style="justify-content: right">
   <wallet-multi-button></wallet-multi-button>
-  </div>
-  <img alt="Vue logo" src="./assets/logo.png" />
   <ArbChain />
 </template>
 

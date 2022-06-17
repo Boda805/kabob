@@ -7,11 +7,13 @@ const props = defineProps({
   blockNumber: { type: Number, default: () => 0 },
 });
 
-const { inputToken, inputAmount, outputToken, outputAmount, tokenPair, swap } = useOrcaQuote();
+const { inputToken, inputAmount, outputToken, outputAmount, tokenPairs, swap, selectTokenPair } = useOrcaQuote();
 const { blocks, setBlockInputAmount, setBlockOutputAmount } = useArbChain();
 
+const selectedTokenPair = ref();
+
 watchEffect(() => {
-    if (props.blockNumber == 1 && blocks.value.length > 0) {
+    if (props.blockNumber == 1) {
         inputAmount.value = blocks.value[0].inputAmount;
         blocks.value[0].outputAmount = outputAmount.value;
     } else {
@@ -21,9 +23,21 @@ watchEffect(() => {
     }
 });
 
+watchEffect(() => {
+    if (selectedTokenPair.value) {
+        selectTokenPair(selectedTokenPair.value)
+    }
+});
+
 </script>
 
 
 <template>
-    <div>{{ inputAmount?.toString() }} {{ inputToken.tag }} for {{ outputAmount?.toNumber() }} {{ outputToken.tag }}</div><button @click="swap"></button>
+    <div>{{ inputAmount?.toString() }} {{ inputToken.tag }} for {{ outputAmount?.toString() }} {{ outputToken.tag }}</div>
+    <select v-model="selectedTokenPair">
+        <option v-for="[pairName, pairAddress] in tokenPairs" :value="pairAddress">{{ pairName }}</option>
+    </select>
+    <button @click="swap">
+        Swap
+    </button>
 </template>
