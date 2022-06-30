@@ -2,6 +2,7 @@
 import { ref, watchEffect }  from "vue";
 import useOrcaQuote from '../composables/useOrcaQuote';
 import useArbChain from '../composables/useArbChain';
+import useReact from '../composables/useReact';
 
 const props = defineProps({
   blockNumber: { type: Number, default: () => 0 },
@@ -37,6 +38,7 @@ watchEffect(() => {
     <select v-model="selectedTokenPair">
         <option v-for="[pairName, pairAddress] in tokenPairs" :value="pairAddress">{{ pairName }}</option>
     </select>
+    <useReact />
     <button @click="swap">
         Swap
     </button>
